@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0f19" />
+  <meta name="description" content="لوحة إدارة المنشورات والمجموعات لفريق قحطان سوفت برو" />
+  <title>QST WhatsApp Publisher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="toastHost" class="toast-host" aria-live="polite"></div>
+  <section id="loginScreen" class="login-screen">
+    <div class="login-card glass">
+      <div class="brand-mark">QST<span>+</span></div>
+      <p class="eyebrow">QST PRO TEAM</p>
+      <h1>QST WhatsApp Publisher</h1>
+      <p class="muted">لوحة إدارة المنشورات والمجموعات</p>
+      <form id="loginForm" class="form-stack">
+        <label>اسم المستخدم<input name="username" autocomplete="username" required placeholder="admin"></label>
+        <label>كلمة المرور<input name="password" type="password" autocomplete="current-password" required placeholder="••••••••••••"></label>
+        <button class="btn btn-primary btn-full" type="submit">تسجيل الدخول <span>←</span></button>
+      </form>
+      <div class="login-note"><span class="status-dot amber"></span> يتم إعداد كلمة مرور المدير من متغيرات الخادم لأول تشغيل.</div>
+    </div>
+  </section>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-row"><div class="brand-mark small">QST<span>+</span></div><div><b>QST Publisher</b><small>QST PRO TEAM</small></div></div>
+      <div class="nav-label">القائمة الرئيسية</div>
+      <nav class="nav-menu">
+        <button class="nav-item active" data-view="dashboard"><i>▦</i> الرئيسية</button>
+        <button class="nav-item" data-view="whatsapp"><i>◉</i> ربط واتساب <span class="nav-tag">غير متاح</span></button>
+        <button class="nav-item" data-view="groups"><i>♧</i> إدارة المجموعات</button>
+        <button class="nav-item" data-view="posts"><i>▤</i> المنشورات</button>
+        <button class="nav-item" data-view="publishing"><i>↗</i> إدارة النشر</button>
+        <button class="nav-item" data-view="logs"><i>☷</i> سجل العمليات</button>
+        <button class="nav-item" data-view="settings"><i>⚙</i> الإعدادات</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="safe-card"><span class="safe-icon">盾</span><b>وضع النشر اليدوي</b><p>تأكيد بشري لكل مجموعة، دون إرسال آلي غير رسمي.</p></div>
+        <button id="logoutBtn" class="nav-item logout"><i>⇥</i> تسجيل الخروج</button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-btn mobile-menu" id="menuBtn" aria-label="القائمة">☰</button>
+        <div class="top-title"><span class="crumb">لوحة التحكم</span><h2 id="pageTitle">نظرة عامة</h2></div>
+        <div class="top-actions"><div class="connection-pill"><span class="status-dot amber"></span><span>واتساب غير مربوط</span></div><button class="icon-btn" id="notificationsBtn" title="التنبيهات">♧<em id="notificationCount" class="count-dot hidden">0</em></button><div class="user-chip"><span class="avatar">Q</span><span id="userName">المدير</span></div></div>
+      </header>
+      <div class="page-wrap">
+        <section id="view-dashboard" class="view active">
+          <div class="welcome-row"><div><p class="eyebrow">QST PRO TEAM / CONTROL CENTER</p><h1>مرحباً بك في لوحة التحكم</h1><p class="muted">إدارة المحتوى والمجموعات ومتابعة عمليات النشر اليدوي.</p></div><button class="btn btn-primary" data-go="posts">＋ منشور جديد</button></div>
+          <div class="notice warning"><span>!</span><div><b>التكامل المباشر مع واتساب غير مفعّل</b><p>هذه النسخة تحفظ المنشورات والمجموعات والحملات، وتجهّز خطوات النشر. الإرسال يتم يدوياً بعد فتح المجموعة ومشاركة المحتوى، لحماية رقمك من أدوات الربط غير الرسمية والإرسال الجماعي المحظور.</p></div></div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-head"><span>المجموعات المحفوظة</span><i>♧</i></div><strong id="statGroups">0</strong><small><span id="statSelected">0</span> مجموعة محددة</small></article>
+            <article class="stat-card"><div class="stat-head"><span>المنشورات</span><i>▤</i></div><strong id="statPosts">0</strong><small>منشور محفوظ</small></article>
+            <article class="stat-card"><div class="stat-head"><span>تم تسجيل إرساله</span><i>✓</i></div><strong id="statSent">0</strong><small>تأكيد يدوي</small></article>
+            <article class="stat-card"><div class="stat-head"><span>قيد التجهيز</span><i>◷</i></div><strong id="statPending">0</strong><small>بانتظار الإرسال اليدوي</small></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel"><div class="panel-head"><div><h3>حالة النظام</h3><p>مؤشرات الاتصال والتشغيل</p></div><span class="badge badge-amber">وضع يدوي</span></div><div class="system-list"><div><span class="system-icon">◉</span><span>خدمة التطبيق</span><b class="green-text">تعمل</b></div><div><span class="system-icon">◎</span><span>حساب واتساب</span><b class="amber-text">غير مربوط</b></div><div><span class="system-icon">▤</span><span>قاعدة البيانات</span><b class="green-text">متصلة عند التحميل</b></div><div><span class="system-icon">↗</span><span>محرك الإرسال الآلي</span><b class="amber-text">غير مفعّل</b></div></div></article>
+            <article class="panel"><div class="panel-head"><div><h3>آخر عملية مسجلة</h3><p>أحدث تأكيد إرسال</p></div></div><div id="lastDelivery" class="empty-state compact"><span>◷</span><b>لا توجد عمليات بعد</b><small>ستظهر آخر عملية بعد تسجيل أول إرسال.</small></div></article>
+          </div>
+          <div class="panel quick-panel"><div class="panel-head"><div><h3>اختصارات سريعة</h3><p>ابدأ من هنا</p></div></div><div class="quick-actions"><button data-go="groups"><span>♧</span><b>إضافة مجموعة</b><small>احفظ مجموعاتك وروابطها</small></button><button data-go="posts"><span>▤</span><b>حفظ منشور</b><small>نصوص ووسائط ومرفقات</small></button><button data-go="publishing"><span>↗</span><b>تجهيز حملة</b><small>اختر المنشور والمجموعات</small></button><button data-go="logs"><span>☷</span><b>مراجعة السجل</b><small>تابع نتائج النشر</small></button></div></div>
+        </section>
+
+        <section id="view-whatsapp" class="view">
+          <div class="section-heading"><div><p class="eyebrow">ACCOUNT / CONNECTION</p><h1>ربط واتساب</h1><p class="muted">حالة الربط والطرق الرسمية المتاحة.</p></div></div>
+          <div class="notice danger"><span>!</span><div><b>لن نطلب رمز اقتران من رقمك في هذه النسخة</b><p>ربط رقم واتساب الشخصي عبر Baileys أو whatsapp-web.js غير رسمي. وتحذر واتساب من ربط الحساب بتطبيقات طرف ثالث؛ فقد يؤدي ذلك إلى حظر مؤقت أو دائم. كما أن واتساب تمنع الرسائل الآلية أو الجماعية غير المرغوبة.</p></div></div>
+          <div class="panel connection-panel"><div class="connection-visual"><div class="orb">◉</div><span class="badge badge-amber">غير مربوط</span><h2>لا يوجد حساب واتساب متصل</h2><p>لا توجد جلسة أو بيانات دخول محفوظة على الخادم.</p></div><div class="connection-details"><div class="detail-line"><span>طريقة الربط</span><b>غير مفعّلة</b></div><div class="detail-line"><span>رمز الاقتران</span><b>غير متاح في وضع النشر اليدوي</b></div><div class="detail-line"><span>اكتشاف منشورات القنوات</span><b>غير مدعوم عبر واجهة Cloud API العامة</b></div><div class="detail-line"><span>قراءة المجموعات الشخصية</span><b>غير متاحة عبر Cloud API العادية</b></div><a class="btn btn-outline btn-full" href="https://developers.facebook.com/documentation/business-messaging/whatsapp/overview/" target="_blank" rel="noopener">توثيق WhatsApp Business Platform ↗</a></div></div>
+          <div class="panel"><h3>البديل المتاح الآن</h3><p class="muted">احفظ محتوى منشوراتك ومرفقاتها داخل اللوحة، ثم افتح روابط مجموعاتك واحداً تلو الآخر، والصق المحتوى وأرسله بنفسك. بعد الإرسال سجّل النتيجة من قائمة الحملة.</p></div>
+        </section>
+
+        <section id="view-groups" class="view">
+          <div class="section-heading"><div><p class="eyebrow">TARGETS / GROUPS</p><h1>إدارة المجموعات</h1><p class="muted">أضف مجموعاتك يدوياً؛ لا يتم الوصول إلى قائمة مجموعات واتساب تلقائياً.</p></div><button class="btn btn-primary" id="addGroupBtn">＋ إضافة مجموعة</button></div>
+          <div class="toolbar"><input id="groupSearch" class="search-input" placeholder="⌕ ابحث عن مجموعة..."/><div class="toolbar-actions"><button class="btn btn-light" id="selectAllGroups">تحديد الكل</button><button class="btn btn-ghost" id="clearGroups">إلغاء التحديد</button><span class="counter" id="groupCounter">0 مجموعات</span></div></div>
+          <div id="groupsList" class="group-grid"><div class="empty-state"><span>♧</span><b>لا توجد مجموعات محفوظة</b><small>أضف اسم المجموعة ورابط الدعوة إن توفر.</small></div></div>
+          <div id="groupFormPanel" class="panel form-panel hidden"><div class="panel-head"><h3>إضافة مجموعة</h3><button class="icon-btn" id="closeGroupForm">×</button></div><form id="groupForm" class="form-grid"><label>اسم المجموعة *<input name="name" required maxlength="160" placeholder="مثال: قروب عملاء QST"></label><label>رابط دعوة المجموعة<input name="inviteUrl" type="url" placeholder="https://chat.whatsapp.com/..."></label><label class="full">ملاحظات<textarea name="note" rows="2" placeholder="ملاحظات داخلية"></textarea></label><div class="form-actions full"><button class="btn btn-primary" type="submit">حفظ المجموعة</button><button class="btn btn-ghost" type="button" id="cancelGroupForm">إلغاء</button></div></form></div>
+        </section>
+
+        <section id="view-posts" class="view">
+          <div class="section-heading"><div><p class="eyebrow">CONTENT / LIBRARY</p><h1>إدارة المنشورات</h1><p class="muted">احفظ نص المنشور وأرفق الصور والفيديوهات والمستندات.</p></div><button class="btn btn-primary" id="newPostBtn">＋ منشور جديد</button></div>
+          <div id="postFormPanel" class="panel form-panel hidden"><div class="panel-head"><h3>منشور جديد</h3><button class="icon-btn" id="closePostForm">×</button></div><form id="postForm" class="form-stack"><label>عنوان المنشور *<input name="title" required maxlength="180" placeholder="عنوان يسهل العثور عليه"></label><label>نص المنشور<textarea name="body" rows="6" placeholder="اكتب محتوى المنشور مع الروابط والتنسيق النصي..."></textarea></label><label class="upload-box"> <span>＋</span><b>إرفاق ملفات</b><small>حتى 3 ملفات، 12MB لكل ملف</small><input name="files" type="file" multiple accept="image/*,video/*,application/pdf,.doc,.docx,.zip,.txt"></label><div id="fileNames" class="file-names"></div><div class="form-actions"><button class="btn btn-primary" type="submit">حفظ المنشور</button><button class="btn btn-ghost" type="button" id="cancelPostForm">إلغاء</button></div></form></div>
+          <div id="postsList" class="posts-grid"><div class="empty-state"><span>▤</span><b>لا توجد منشورات محفوظة</b><small>أنشئ منشورك الأول لتجهيزه للنشر.</small></div></div>
+        </section>
+
+        <section id="view-publishing" class="view">
+          <div class="section-heading"><div><p class="eyebrow">CAMPAIGNS / MANUAL PUBLISHING</p><h1>إدارة النشر</h1><p class="muted">أنشئ حملة توزيع يدوية على مجموعاتك المحددة.</p></div></div>
+          <div class="notice info"><span>i</span><div><b>النشر لا يتم في الخلفية</b><p>يفرض الخادم الفاصل الزمني بين خطوات الحملة، لكنه لا يرسل إلى واتساب. افتح كل مجموعة، أرسل المحتوى يدوياً، ثم سجّل النتيجة قبل إتاحة الخطوة التالية.</p></div></div>
+          <div class="publish-layout"><div class="panel"><div class="panel-head"><div><h3>تجهيز حملة جديدة</h3><p>حدد المنشور والمجموعات المستهدفة</p></div><span class="step-badge">01</span></div><form id="campaignForm" class="form-stack"><label>المنشور المطلوب<select id="campaignPost" name="postId" required><option value="">اختر منشوراً...</option></select></label><div class="label-row"><label>المجموعات المستهدفة</label><span id="targetCount" class="counter">0 محددة</span></div><div id="campaignGroups" class="target-select"><small class="muted">حدد المجموعات من صفحة إدارة المجموعات أولاً.</small></div><label>الفاصل الزمني بين المجموعات<select id="intervalSelect"><option value="30">30 ثانية</option><option value="60" selected>دقيقة واحدة</option><option value="120">دقيقتان</option><option value="300">5 دقائق</option><option value="600">10 دقائق</option><option value="custom">تحديد يدوي</option></select></label><div id="customIntervalWrap" class="hidden"><label>الفاصل بالثواني<input id="customInterval" type="number" min="30" max="86400" value="60"></label></div><button class="btn btn-primary btn-full" type="submit">إنشاء حملة وتجهيز قائمة الإرسال ↗</button></form></div><div class="panel preview-panel"><div class="panel-head"><div><h3>معاينة المنشور</h3><p>راجع المحتوى قبل بدء العمل</p></div><span class="step-badge">02</span></div><div id="postPreview" class="post-preview"><div class="empty-state compact"><span>▤</span><b>اختر منشوراً للمعاينة</b></div></div><div class="preview-meta"><span>المجموعات المحددة</span><b id="previewTargets">0</b></div><div class="preview-meta"><span>عدد الخطوات</span><b id="previewSteps">0</b></div><div class="preview-meta"><span>الفاصل الزمني</span><b id="previewInterval">60 ثانية</b></div></div></div>
+          <div class="panel campaign-panel"><div class="panel-head"><div><h3>الحملات السابقة</h3><p>تابع حالة كل حملة</p></div><button class="btn btn-light" id="refreshCampaigns">تحديث</button></div><div id="campaignsList" class="campaign-list"><div class="empty-state compact"><span>◷</span><b>لا توجد حملات بعد</b></div></div></div>
+          <div id="campaignDetail" class="panel hidden"><div class="panel-head"><div><h3 id="campaignDetailTitle">قائمة الإرسال</h3><p>افتح رابط المجموعة ثم أرسل المحتوى يدوياً وسجّل النتيجة.</p></div><button class="icon-btn" id="closeCampaignDetail">×</button></div><div id="deliveryList" class="delivery-list"></div></div>
+        </section>
+
+        <section id="view-logs" class="view">
+          <div class="section-heading"><div><p class="eyebrow">AUDIT / ACTIVITY</p><h1>سجل العمليات</h1><p class="muted">كل سجل يوضح ما تم تأكيده يدوياً أو تعذّر إرساله.</p></div><a class="btn btn-outline" href="/api/logs.csv" id="exportLogs">↓ تصدير CSV</a></div>
+          <div class="toolbar"><input class="search-input" id="logSearch" placeholder="⌕ بحث في المجموعة أو المنشور..."/><select id="logStatus"><option value="all">كل الحالات</option><option value="sent_manual">تم الإرسال يدوياً</option><option value="pending">بانتظار الإرسال</option><option value="failed">فشل</option></select></div>
+          <div class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>المجموعة</th><th>المنشور</th><th>الحالة</th><th>التاريخ</th><th>ملاحظات</th></tr></thead><tbody id="logsTable"><tr><td colspan="5" class="empty-cell">لا توجد بيانات سجل حتى الآن.</td></tr></tbody></table></div></div>
+        </section>
+
+        <section id="view-settings" class="view">
+          <div class="section-heading"><div><p class="eyebrow">PREFERENCES / SECURITY</p><h1>الإعدادات</h1><p class="muted">إدارة اسم النظام والفواصل الزمنية وأمان حساب المدير.</p></div></div>
+          <div class="settings-grid"><div class="panel"><h3>الإعدادات العامة</h3><form id="settingsForm" class="form-stack"><label>اسم النظام<input name="app_name" maxlength="100"></label><label>الفاصل الافتراضي (بالثواني)<input name="default_interval_seconds" type="number" min="30" max="86400"></label><button class="btn btn-primary" type="submit">حفظ الإعدادات</button></form></div><div class="panel"><h3>تغيير كلمة مرور المدير</h3><form id="passwordForm" class="form-stack"><label>كلمة المرور الحالية<input name="currentPassword" type="password" required></label><label>كلمة المرور الجديدة<input name="newPassword" type="password" minlength="12" required></label><small class="muted">12 حرفاً على الأقل.</small><button class="btn btn-primary" type="submit">تحديث كلمة المرور</button></form></div><div class="panel"><h3>حالة التكاملات</h3><div class="system-list"><div><span>WhatsApp Web Pairing</span><b class="amber-text">غير مفعّل</b></div><div><span>WhatsApp Cloud API</span><b class="amber-text">غير مربوط</b></div><div><span>PostgreSQL</span><b class="green-text">مطلوب</b></div><div><span>تخزين الجلسات</span><b class="muted">لا توجد جلسة واتساب</b></div></div></div></div>
+        </section>
+      </div>
+      <footer class="footer">QST PRO TEAM <span>•</span> #فريق_قحطان_برو_في_كل_خدمه_نحن_معك</footer>
+    </main>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop hidden"><div class="modal glass"><button id="modalClose" class="icon-btn modal-close">×</button><div id="modalContent"></div></div></div>
+  <script src="/main.js" defer></script>
+</body>
+</html>
